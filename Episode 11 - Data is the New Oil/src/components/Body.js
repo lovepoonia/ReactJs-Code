@@ -2,37 +2,17 @@
 import useOnlineStatus from "../utils/useOnlineStatus";
 import Card, {vegCard} from "./Card";
 import ShimmerUi from "./Shimmer";
-import { useEffect, useState, useContext } from "react"; 
+import {useContext } from "react"; 
 import { Link } from "react-router-dom";
 import UserContext from "../utils/UserContext";
+import useBody from "../utils/useBody";
 
 const Body = ()=> {
-    
-    
-    const [resListR , setResList]=useState([]);
-    const [filterR, setFilterR]=useState([]);
+    const {resListR, filterR, searchText, setSearchText, setFilterR} = useBody();
     const PrometedCard = vegCard(Card);
-
-    // console.log(resListR)
    
     const {loggedInUser, setUserName} = useContext(UserContext)
     
-
-    const [searchText, setSearchText] = useState("");
-
-    useEffect(()=>{
-        fetchData();
-    },[]);
-
-    const fetchData = async () =>{
-        const data= await fetch("https://www.swiggy.com/dapi/restaurants/list/v5?lat=12.9715987&lng=77.5945627&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING");
-        const json =await data.json();
-        // console.log(json);
-
-        setResList(json.data.cards[1].card.card.gridElements.infoWithStyle.restaurants);
-        setFilterR(json.data.cards[1].card.card.gridElements.infoWithStyle.restaurants);
-    }
-     
     const onlineStatus = useOnlineStatus();
     if(onlineStatus === false){
         return <div> No internet connection </div>;
@@ -43,8 +23,6 @@ const Body = ()=> {
     }
 
     return(
-
-
         <div className="body">
 
             <div className="felter flex al">
@@ -62,7 +40,7 @@ const Body = ()=> {
             <button className="px-4 py-2 bg-gray-200 rounded"
                  onClick={() => {
                     const filterList= resListR.filter((res)=>res.info.avgRating > 4.5);
-                    setResList(filterList);
+                    setFilterR(filterList);
                  }}>Top Rated Restaurants</button>
             </div>
             <div className="m-2 p-4">
@@ -72,7 +50,7 @@ const Body = ()=> {
             </div>
             <div className="flex flex-wrap">
                {
-                filterR.map((restaurant)=>
+                resListR.map((restaurant)=>
                ( <Link key={restaurant.info.id} to={"/restaurants/"+ restaurant.info.id}>{
                 restaurant.info.veg?<PrometedCard resData={restaurant}/>:<Card resData={restaurant}/>
                }</Link>))

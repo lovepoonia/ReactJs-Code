@@ -16,14 +16,9 @@ const RestaurantMenu = () => {
 
     const {name , avgRating, cuisines
     } = resInfo?.cards[2]?.card?.card?.info;
-    // itemCards name should be same for api
-    // const { itemCards } = resInfo?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card;
    
-
     const categories = resInfo?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards.filter(c=>c.card?.card?.["@type"] =="type.googleapis.com/swiggy.presentation.food.v2.ItemCategory");
-    // const categories2 = resInfo?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards.filter(c=>c.card?.card?.["@type"] =="type.googleapis.com/swiggy.presentation.food.v2.NestedItemCategory");
-    // console.log(categories)
-    // console.log(categories2)
+    
     return (
         <div className="text-center">
             <h1 className="font-bold my-5 text-2xl">{name}</h1>
