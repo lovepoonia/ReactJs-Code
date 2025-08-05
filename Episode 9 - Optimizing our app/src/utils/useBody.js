@@ -1,21 +1,39 @@
-import React, { useEffect , useState } from 'react'
+import { useEffect, useState } from "react";
 
-function useBody() {
-    const [resListR , setResList]=useState([]);
-    const [filterR, setFilterR]=useState([]);
-    useEffect(()=>{
-        fetchData();
-    });
+const useBody = () => {
+  const [resListR, setResList] = useState([]);
+  const [filterR, setFilterR] = useState([]);
+  const [searchText, setSearchText] = useState("");
 
-    const fetchData = async ()=>{
-        const data= await fetch("https://www.swiggy.com/dapi/restaurants/list/v5?lat=12.9715987&lng=77.5945627&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING");
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-        const json= await data.json();
+  const fetchData = async () => {
+    try {
+      const data = await fetch(
+        "https://www.swiggy.com/dapi/restaurants/list/v5?lat=12.9715987&lng=77.5945627&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
+      );
+      const json = await data.json();
+      const restaurants = json?.data?.cards?.[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants || [];
 
-        setResList(json.data.cards[1].card.card.gridElements.infoWithStyle.restaurants);
-        setFilterR(json.data.cards[1].card.card.gridElements.infoWithStyle.restaurants);
+      setResList(restaurants);
+      setFilterR(restaurants);
+    } catch (error) {
+      console.error("Failed to fetch restaurant data:", error);
     }
-  return filterR,resListR  ;
-}
+  };
+
+  return {
+    resListR,
+    setResList,
+    filterR,
+    setFilterR,
+    searchText,
+    setSearchText,
+  };
+};
+
+
 
 export default useBody;
