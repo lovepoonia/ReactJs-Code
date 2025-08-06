@@ -1,37 +1,17 @@
 import useOnlineStatus from "../utils/useOnlineStatus";
 import Card, {vegCard} from "./Card";
 import ShimmerUi from "./Shimmer";
-import { useEffect, useState, useContext } from "react"; 
+import {useContext } from "react"; 
 import { Link } from "react-router-dom";
 import UserContext from "../utils/UserContext";
-
+import useBody from "../utils/useBody";
 const Body = ()=> {
+    const {resListR, filterR, setFilterR, searchText, setSearchText} = useBody();
     
-    
-    const [resListR , setResList]=useState([]);
-    const [filterR, setFilterR]=useState([]);
     const PrometedCard = vegCard(Card);
 
-    // console.log(resListR)
-   
     const {loggedInUser, setUserName} = useContext(UserContext)
-    
 
-    const [searchText, setSearchText] = useState("");
-
-    useEffect(()=>{
-        fetchData();
-    },[]);
-
-    const fetchData = async () =>{
-        const data= await fetch("https://www.swiggy.com/dapi/restaurants/list/v5?lat=12.9715987&lng=77.5945627&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING");
-        const json =await data.json();
-        // console.log(json);
-
-        setResList(json.data.cards[1].card.card.gridElements.infoWithStyle.restaurants);
-        setFilterR(json.data.cards[1].card.card.gridElements.infoWithStyle.restaurants);
-    }
-     
     const onlineStatus = useOnlineStatus();
     if(onlineStatus === false){
         return <div> No internet connection </div>;
@@ -42,8 +22,6 @@ const Body = ()=> {
     }
 
     return(
-
-
         <div className="body">
 
             <div className="felter flex al">
